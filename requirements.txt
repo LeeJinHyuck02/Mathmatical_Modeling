@@ -1,3 +1,4 @@
 streamlit
 numpy
 matplotlib
+torch --index-url https://download.pytorch.org/whl/cpu
