@@ -47,7 +47,7 @@ t, x, y = simulate(a, b, x0, y0)
 
 # 고품질 시각화를 위한 폰트 및 그리드 설정
 plt.rcParams.update({"font.family": "serif", "axes.grid": True, "grid.linestyle": "--"})
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5), dpi=150)
+fig, ax1 = plt.subplots(figsize=(10, 5), dpi=150)
 
 # 시계열 그래프
 ax1.plot(t, x, label="Species 1 ($x$)", color='#1f77b4', linewidth=2)
@@ -59,26 +59,6 @@ ax1.set_ylabel("Density")
 ax1.set_xlim(0, 50)
 ax1.set_ylim(-0.05, 1.5)
 ax1.legend(loc='upper right')
-
-# 위상 평면
-ax2.plot(x, y, color="green", linewidth=2)
-ax2.scatter([x0], [y0], color="blue", s=60, label="Start", zorder=5)
-ax2.scatter([x[-1]], [y[-1]], color="black", marker="x", s=80, label="End", zorder=5)
-
-# 평형점(Equilibrium) 계산 및 마킹
-if a * b != 1.0:
-    x_eq = (1 - a) / (1 - a * b)
-    y_eq = (1 - b) / (1 - a * b)
-    if x_eq >= 0 and y_eq >= 0:
-        ax2.scatter([x_eq], [y_eq], color='purple', marker='*', s=150, zorder=5, label="Equilibrium")
-
-ax2.set_title("Phase Portrait")
-ax2.set_xlabel("Species 1 ($x$)")
-ax2.set_ylabel("Species 2 ($y$)")
-# 위상 평면 축 고정: x, y 모두 0~1.5
-ax2.set_xlim(-0.05, 1.5)
-ax2.set_ylim(-0.05, 1.5)
-ax2.legend(loc='upper right')
 
 plt.tight_layout()
 st.pyplot(fig)
