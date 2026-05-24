@@ -106,7 +106,7 @@ with torch.no_grad():
     prediction = model(u_tensor, t_tensor).numpy()
 
 plt.rcParams.update({"font.family": "serif", "axes.grid": True, "grid.linestyle": "--"})
-fig, ax1 = plt.subplots(figsize=(10, 5), dpi=150)
+fig, ax1 = plt.subplots(figsize=(9, 4.5), dpi=150)
 
 # 시계열 그래프
 ax1.plot(t_np, prediction[:, 0], label="Species 1 ($x$)", color='#1f77b4', linewidth=2)
@@ -114,7 +114,7 @@ ax1.plot(t_np, prediction[:, 1], linestyle="--", color='#d62728', linewidth=2, l
 ax1.set_title("Population Density Time Series")
 ax1.set_xlabel("Time ($t$)")
 ax1.set_ylabel("Density")
-ax1.set_xlim(0, T_end)
+ax1.set_xlim(0, 15)
 ax1.set_ylim(-0.05, 1.5)
 ax1.legend(loc='upper right')
 st.pyplot(fig)

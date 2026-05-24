@@ -43,11 +43,11 @@ def simulate(a, b, x0, y0, T_end=50.0, h=0.05):
     return t_vals, x_vals, y_vals
 
 # 5. 결과 계산 및 고정축 시각화
-t, x, y = simulate(a, b, x0, y0)
+t, x, y = simulate(a, b, x0, y0, T_end=15.0)
 
 # 고품질 시각화를 위한 폰트 및 그리드 설정
 plt.rcParams.update({"font.family": "serif", "axes.grid": True, "grid.linestyle": "--"})
-fig, ax1 = plt.subplots(figsize=(10, 5), dpi=150)
+fig, ax1 = plt.subplots(figsize=(9, 4.5), dpi=150)
 
 # 시계열 그래프
 ax1.plot(t, x, label="Species 1 ($x$)", color='#1f77b4', linewidth=2)
@@ -55,8 +55,8 @@ ax1.plot(t, y, label="Species 2 ($y$)", linestyle="--", color='#d62728', linewid
 ax1.set_title("Population Density Time Series")
 ax1.set_xlabel("Time ($t$)")
 ax1.set_ylabel("Density")
-# 시계열 축 고정: 시간은 0~50, 밀도는 0~1.5
-ax1.set_xlim(0, 50)
+# 시계열 축 고정: 시간은 0~15, 밀도는 0~1.5
+ax1.set_xlim(0, 15)
 ax1.set_ylim(-0.05, 1.5)
 ax1.legend(loc='upper right')
 
