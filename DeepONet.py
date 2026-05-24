@@ -117,4 +117,6 @@ ax1.set_ylabel("Density")
 ax1.set_xlim(0, 15)
 ax1.set_ylim(-0.05, 1.5)
 ax1.legend(loc='upper right')
+
+plt.tight_layout()
 st.pyplot(fig)
