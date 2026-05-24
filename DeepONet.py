@@ -70,19 +70,25 @@ model = load_model()
 # ==========================================
 # 3. Streamlit 웹 UI 구성 및 사이드바 제어
 # ==========================================
-st.set_page_config(page_title="DeepONet EV vs ICEV", layout="wide")
-st.title("Parametric Operator Learning Simulator")
-st.markdown("매개변수화된 딥오넷(Parametric DeepONet)을 활용하여 수치 적분(RK4) 없이 O(1)의 속도로 로트카-볼테라 생태계의 궤적을 실시간 추론합니다.")
+st.set_page_config(page_title="DeepONet Simulator", layout="wide")
+st.title("Competition of Two Species: Advanced Simulator")
 
 # 좌측 사이드바에 4개의 슬라이더 배치
-st.sidebar.header("Input Variables")
-st.sidebar.markdown("초기 조건 (Initial Conditions)")
-x0 = st.sidebar.slider("Init Species 1 (x0)", 0.01, 1.00, 0.20, 0.01)
-y0 = st.sidebar.slider("Init Species 2 (y0)", 0.01, 1.00, 0.80, 0.01)
+st.sidebar.header("Model Parameters")
+a = st.sidebar.slider("Parameter $a$ (Species 2 on 1)", 0.1, 2.0, 1.5, 0.05)
+b = st.sidebar.slider("Parameter $b$ (Species 1 on 2)", 0.1, 2.0, 0.5, 0.05)
 
-st.sidebar.markdown("경쟁 계수 (Competition Params)")
-a = st.sidebar.slider("Param 'a' (ICEV -> EV 억제력)", 0.1, 3.0, 1.5, 0.1)
-b = st.sidebar.slider("Param 'b' (EV -> ICEV 억제력)", 0.1, 3.0, 0.5, 0.1)
+st.sidebar.header("Initial Conditions")
+auto_balance = st.sidebar.checkbox("Maintain $x_0 + y_0 = 1.0$", value=False)
+
+x0 = st.sidebar.slider("Initial $x_0$ (Species 1)", 0.01, 1.0, 0.2, 0.01)
+
+# 체크박스 상태에 따른 y0 변수 할당 로직
+if auto_balance:
+    y0 = 1.0 - x0
+    st.sidebar.info(f"Auto-calculated: Initial $y_0$ = {y0:.2f}")
+else:
+    y0 = st.sidebar.slider("Initial $y_0$ (Species 2)", 0.01, 1.0, 0.8, 0.01)
 
 # ==========================================
 # 4. 실시간 순전파 추론 및 시각화
@@ -100,21 +106,36 @@ with torch.no_grad():
     prediction = model(u_tensor, t_tensor).numpy()
 
 plt.rcParams.update({"font.family": "serif", "axes.grid": True, "grid.linestyle": "--"})
-fig, ax = plt.subplots(figsize=(10, 5), dpi=150)
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5), dpi=150)
 
-# 도표 렌더링
-ax.plot(t_np, prediction[:, 0], color='#1f77b4', linewidth=3, label="Species 1 ($x$)")
-ax.plot(t_np, prediction[:, 1], color='#d62728', linestyle='--', linewidth=3, label="Species 2 ($y$)")
+# 시계열 그래프
+ax1.plot(t_np, prediction[:, 0], label="Species 1 ($x$)", color='#1f77b4', linewidth=2)
+ax1.plot(t_np, prediction[:, 1], linestyle="--", color='#d62728', linewidth=2, label="Species 2 ($y$)")
+ax1.set_title("Population Density Time Series")
+ax1.set_xlabel("Time ($t$)")
+ax1.set_ylabel("Density")
+ax1.set_xlim(0, T_end)
+ax1.set_ylim(-0.05, 1.5)
+ax1.legend(loc='upper right')
 
-ax.scatter(0, x0, color='blue', s=80, zorder=5)
-ax.scatter(0, y0, color='red', s=80, zorder=5)
+# 위상 평면
+ax2.plot(prediction[:, 0], prediction[:, 1], color="green", linewidth=2)
+ax2.scatter([x0], [y0], color="blue", s=60, label="Start", zorder=5)
+ax2.scatter([prediction[-1, 0]], [prediction[-1, 1]], color="black", marker="x", s=80, label="End", zorder=5)
 
-ax.set_title(f"Interactive Trajectory Inference (a={a:.1f}, b={b:.1f})")
-ax.set_xlabel("Time ($t$)")
-ax.set_ylabel("Population Density")
-ax.set_xlim(-0.5, T_end)
-ax.set_ylim(-0.1, 1.3)
-ax.legend(loc='upper right', ncol=2)
+# 평형점(Equilibrium) 계산 및 마킹
+if a * b != 1.0:
+    x_eq = (1 - a) / (1 - a * b)
+    y_eq = (1 - b) / (1 - a * b)
+    if x_eq >= 0 and y_eq >= 0:
+        ax2.scatter([x_eq], [y_eq], color='purple', marker='*', s=150, zorder=5, label="Equilibrium")
 
-# Streamlit 화면에 매트플롯립 피규어 전송
+ax2.set_title("Phase Portrait")
+ax2.set_xlabel("Species 1 ($x$)")
+ax2.set_ylabel("Species 2 ($y$)")
+ax2.set_xlim(-0.05, 1.5)
+ax2.set_ylim(-0.05, 1.5)
+ax2.legend(loc='upper right')
+
+plt.tight_layout()
 st.pyplot(fig)
