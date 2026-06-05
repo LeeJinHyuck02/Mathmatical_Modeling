@@ -9,11 +9,11 @@ a, b_param = 1.8, 1.5
 # 2. 로트카-볼테라 미분방정식 정의
 def lotka_volterra(Y, t):
     x, y = Y
-    return [x * (1 - x - a * y), y * (1 - y - b_param * x)]
+    return [x * (1 - x - a * y), y * (1 - y - b_param * x)] 
 
 # 3. 위상 공간 격자(Grid) 생성 (상한 1.0으로 설정)
 grid_points = 150
-x_vals = np.linspace(0.01, 1.0, grid_points)
+x_vals = np.linspace(0.01, 1.0, grid_points) 
 y_vals = np.linspace(0.01, 1.0, grid_points)
 X, Y = np.meshgrid(x_vals, y_vals)
 Z = np.zeros_like(X)

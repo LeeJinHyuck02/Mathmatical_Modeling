@@ -15,11 +15,11 @@ plt.rcParams.update({
     "figure.dpi": 300,             
     "axes.grid": True,             
     "grid.alpha": 0.4,             
-    "grid.linestyle": "--"         
+    "grid.linestyle": "--"          
 })
 
 # 2. 미분 방정식 및 RK4 알고리즘 정의
-def f(x, y, a): return x * (1 - x - a * y)
+def f(x, y, a): return x * (1 - x - a * y) 
 def g(x, y, b): return y * (1 - y - b * x)
 
 def rk4_step(xn, yn, h, a, b):

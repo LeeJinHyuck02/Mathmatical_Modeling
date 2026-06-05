@@ -10,7 +10,7 @@ np.random.seed(42)
 # 1. 아키텍처 정의
 class BranchNet(nn.Module):
     def __init__(self, output_dim=64):
-        super(BranchNet, self).__init__()
+        super(BranchNet, self).__init__() 
         self.net = nn.Sequential(
             nn.Linear(2, 64), nn.Tanh(),
             nn.Linear(64, 64), nn.Tanh(),

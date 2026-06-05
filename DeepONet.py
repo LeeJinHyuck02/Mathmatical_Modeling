@@ -12,7 +12,7 @@ class ParametricBranchNet(nn.Module):
         super(ParametricBranchNet, self).__init__()
         self.net = nn.Sequential(
             nn.Linear(4, 64), nn.Tanh(),
-            nn.Linear(64, 64), nn.Tanh(),
+            nn.Linear(64, 64), nn.Tanh(), 
             nn.Linear(64, output_dim)
         )
     def forward(self, u): return self.net(u)

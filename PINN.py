@@ -12,7 +12,7 @@ def rk4_reference(a, b, x0, y0, T_end=25.0, h=0.05):
     def g(x, y): return y * (1 - y - b * x)
     num_steps = int(T_end / h)
     t_vals = np.linspace(0, T_end, num_steps)
-    x_vals, y_vals = np.zeros(num_steps), np.zeros(num_steps)
+    x_vals, y_vals = np.zeros(num_steps), np.zeros(num_steps) 
     x_vals[0], y_vals[0] = x0, y0
     for i in range(1, num_steps):
         xn, yn = x_vals[i-1], y_vals[i-1]

@@ -10,7 +10,7 @@ torch.manual_seed(42)
 # [A] 기준 해(Ground Truth) 생성을 위한 RK4
 def rk4_reference(a, b, x0, y0, T_end=25.0, h=0.05):
     def f(x, y): return x * (1 - x - a * y)
-    def g(x, y): return y * (1 - y - b * x)
+    def g(x, y): return y * (1 - y - b * x) 
     
     num_steps = int(T_end / h)
     t_vals = np.linspace(0, T_end, num_steps)

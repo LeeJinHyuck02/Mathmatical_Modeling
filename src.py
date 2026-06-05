@@ -54,11 +54,11 @@ ax1.plot(t, x, label="Species 1 ($x$)", color='#1f77b4', linewidth=2)
 ax1.plot(t, y, label="Species 2 ($y$)", linestyle="--", color='#d62728', linewidth=2)
 ax1.set_title("Population Density Time Series")
 ax1.set_xlabel("Time ($t$)")
-ax1.set_ylabel("Density")
+ax1.set_ylabel("Density") 
 # 시계열 축 고정: 시간은 0~15, 밀도는 0~1.5
 ax1.set_xlim(0, 15)
 ax1.set_ylim(-0.05, 1.5)
-ax1.legend(loc='upper right')
+ax1.legend(loc='upper right') 
 
 plt.tight_layout()
 st.pyplot(fig)
