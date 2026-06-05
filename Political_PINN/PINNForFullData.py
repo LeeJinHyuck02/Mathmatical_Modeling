@@ -36,7 +36,7 @@ t_tensor = torch.tensor(t_raw / T_MAX, dtype=torch.float32, requires_grad=True)
 x_tensor = torch.tensor(x_raw / X_MAX, dtype=torch.float32)
 
 # =========================================================
-# 2. 다중 시작 대응 PINN 신경망 구조
+# 2. PINN 신경망 구조
 # =========================================================
 class PoliticalPINN_MultiStart(nn.Module):
     def __init__(self):
@@ -86,7 +86,7 @@ class PoliticalPINN_MultiStart(nn.Module):
         return r.detach().numpy(), K.detach().numpy() * X_MAX, alpha.detach().numpy()
 
 # =========================================================
-# 3. 손실 함수 (기울기 페널티 없이 단순 Data + Physics)
+# 3. 손실 함수
 # =========================================================
 def compute_loss(model, t, x_true):
     x_pred = model(t)
@@ -106,11 +106,7 @@ def compute_loss(model, t, x_true):
 
     loss_physics = torch.mean(ode_res_1**2 + ode_res_2**2 + ode_res_3**2)
 
-    # 1. 분산 기반 prior 제거 후 데이터 궤적의 차분 절대값 페널티로 대체
-    diff_pred = torch.abs(x_pred[1:] - x_pred[:-1])
-    loss_prior_diff = 1.0 / (torch.mean(diff_pred) + 1e-6) # 변동이 없을수록 막대한 페널티 부과 (기울기 소실 없음)
-
-    total_loss = (loss_data * 2) + loss_physics 
+    total_loss = loss_data + loss_physics 
 
     return total_loss
 

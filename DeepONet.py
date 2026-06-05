@@ -60,7 +60,6 @@ class HardConstraintDeepONet(nn.Module):
 @st.cache_resource
 def load_model():
     model = HardConstraintDeepONet(p=64)
-    # CPU 환경에서도 안전하게 로드될 수 있도록 map_location 지정
     model.load_state_dict(torch.load("deeponet_weights.pth", map_location=torch.device('cpu'), weights_only=True))
     model.eval()
     return model
@@ -73,7 +72,6 @@ model = load_model()
 st.set_page_config(page_title="DeepONet Simulator", layout="wide")
 st.title("Competition of Two Species: Advanced Simulator")
 
-# 좌측 사이드바에 4개의 슬라이더 배치
 st.sidebar.header("Model Parameters")
 a = st.sidebar.slider("Parameter $a$ (Species 2 on 1)", 0.1, 2.0, 1.5, 0.05)
 b = st.sidebar.slider("Parameter $b$ (Species 1 on 2)", 0.1, 2.0, 0.5, 0.05)
@@ -83,7 +81,6 @@ auto_balance = st.sidebar.checkbox("Maintain $x_0 + y_0 = 1.0$", value=False)
 
 x0 = st.sidebar.slider("Initial $x_0$ (Species 1)", 0.01, 1.0, 0.2, 0.01)
 
-# 체크박스 상태에 따른 y0 변수 할당 로직
 if auto_balance:
     y0 = 1.0 - x0
     st.sidebar.info(f"Auto-calculated: Initial $y_0$ = {y0:.2f}")
@@ -98,21 +95,19 @@ num_points = 300
 t_np = np.linspace(0, T_end, num_points)
 t_tensor = torch.tensor(t_np, dtype=torch.float32).view(-1, 1)
 
-# 사용자가 조작한 4개의 변수를 하나의 텐서로 결합
 u_tensor = torch.tensor([[x0, y0, a, b]] * num_points, dtype=torch.float32)
 
-# 단 1회의 행렬 연산으로 전체 시간 도메인 궤적 생성
 with torch.no_grad():
     prediction = model(u_tensor, t_tensor).numpy()
 
 plt.rcParams.update({"font.family": "serif", "axes.grid": True, "grid.linestyle": "--"})
 fig, ax1 = plt.subplots(figsize=(9, 4.5), dpi=150)
 
-# 시계열 그래프
-ax1.plot(t_np, prediction[:, 0], label="Species 1 ($x$)", color='#1f77b4', linewidth=2)
-ax1.plot(t_np, prediction[:, 1], linestyle="--", color='#d62728', linewidth=2, label="Species 2 ($y$)")
+# [수정 구간] 레이블 문자열의 달러 기호($) 쌍을 맞추고 Raw string 지정을 위해 r 기입
+ax1.plot(t_np, prediction[:, 0], label=r"Species 1 ($x$)", color='#1f77b4', linewidth=2)
+ax1.plot(t_np, prediction[:, 1], linestyle="--", color='#d62728', linewidth=2, label=r"Species 2 ($y$)")
 ax1.set_title("Population Density Time Series")
-ax1.set_xlabel("Time ($t$)")
+ax1.set_xlabel(r"Time ($t$)")
 ax1.set_ylabel("Density")
 ax1.set_xlim(0, 15)
 ax1.set_ylim(-0.05, 1.5)
