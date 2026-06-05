@@ -1,4 +1,4 @@
-# Mathmatical Modeling Project
+# 🚀 Mathmatical Modeling Project
 
 본 프로젝트는 크게 두 가지 갈래로 구성됩니다. 첫째, 수치 해석(RK4) 및 신경망(PINN, DeepONet) 로트카-볼테라(Lotka-Volterra) 경쟁 모델을 시뮬레이션합니다. 둘째, 이를 응용하여 실제 대한민국 정당 지지율 시계열 데이터를 수집/정제하고 역문제(Inverse Problem)를 풀어 미래 지지율 동역학을 분석하고 예측합니다.
 
